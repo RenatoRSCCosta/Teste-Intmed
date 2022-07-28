@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from medicar.serializer import *
 from medicar.validators import *
+from django.db.models import Q
 from medicar.models import *
 
 
@@ -13,7 +14,8 @@ class ConsultasViewSet(ModelViewSet):
     allowed_methods = ('GET','POST','DELETE')
 
     def get_queryset(self):
-        return self.queryset.filter(agenda__data_agenda__gte = datetime.now().strftime('%Y-%m-%d'), horarios__horario__gte = datetime.now().strftime('%H:%M:%S'))
+        return self.queryset.filter(Q(agenda__data_agenda__gt = datetime.now().strftime('%Y-%m-%d')) | 
+        Q(agenda__data_agenda = datetime.now().strftime('%Y-%m-%d'),horario__horario__gte = datetime.now().strftime('%H:%M')))
 
     def create(self, request, *args, **kwargs):
 
