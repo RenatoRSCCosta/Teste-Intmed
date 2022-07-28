@@ -66,15 +66,14 @@ class AgendasViewSet(ReadOnlyModelViewSet):
         medicos = self.request.query_params.getlist('medico')
         data_inicio = self.request.query_params.get('data_inicio')
         data_final = self.request.query_params.get('data_final')
-        crm = self.request.query_params.get('crm')
-        print(crm)
+        crm = self.request.query_params.getlist('crm')
 
         if medicos:
             queryset = queryset.filter(medico__id__in = medicos, valido = True, horarios__valido = True)
         if data_inicio and data_final:
             queryset = queryset.filter(data_agenda__range=(data_inicio, data_final),valido = True)
         if crm:
-            queryset = queryset.filter(medico__crm__in = crm)
+            queryset = queryset.filter(medico__crm__in = crm, valido = True, horarios__valido = True)
         else:
             queryset = queryset.filter(data_agenda__gte=hoje.strftime('%Y-%m-%d'), valido = True, horarios__valido = True)
 
