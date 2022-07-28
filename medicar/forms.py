@@ -5,7 +5,7 @@ from medicar.validators import *
 class AgendaForm(forms.ModelForm):
     class Meta:
         model = Agenda
-        fields = ('medico','data_agenda')
+        exclude = ('valido',)
 
     def clean(self):
         data_agenda = self.cleaned_data.get('data_agenda')
@@ -18,3 +18,8 @@ class AgendaForm(forms.ModelForm):
                 mensagem_erro = lista_de_erros[erro]
                 self.add_error(erro, mensagem_erro)
         return self.cleaned_data
+
+class HorariosForm(forms.ModelForm):
+    class Meta:
+        model = Horarios
+        exclude = ('valido',)
