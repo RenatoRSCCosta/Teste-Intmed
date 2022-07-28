@@ -9,7 +9,7 @@ from medicar.models import *
 
 
 class ConsultasViewSet(ModelViewSet):
-    queryset = Consultas.objects.all()
+    queryset = Consulta.objects.all()
     serializer_class = ConsultaSerializer
     allowed_methods = ('GET','POST','DELETE')
 
@@ -21,10 +21,12 @@ class ConsultasViewSet(ModelViewSet):
         | Q(agenda__data_agenda = hoje, horario__horario__gte = agora)).order_by('agenda__data_agenda','horario__horario')
 
     def create(self, request, *args, **kwargs):
+        # Realiza a validação da agenda e dos horarios
         valid = valida_agenda()
+
         dados = request.data
         agenda = Agenda.objects.get(pk = dados['agenda_id'])
-        horario = Horarios.objects.get(horario = dados['horario'],agenda = dados['agenda_id'])       
+        horario = Horario.objects.get(horario = dados['horario'],agenda = dados['agenda_id'])       
         data_agendamento = datetime.now().strftime('%Y-%m-%d')
 
         if not horario.valido:
@@ -32,7 +34,7 @@ class ConsultasViewSet(ModelViewSet):
         if not agenda.valido:
             raise APIException('Agenda não disponivel para agendamento')
 
-        nova_consulta = Consultas.objects.create(data_agendamento=data_agendamento, horario_id=horario.id, agenda_id=agenda.id)
+        nova_consulta = Consulta.objects.create(data_agendamento=data_agendamento, horario_id=horario.id, agenda_id=agenda.id)
         nova_consulta.save()
         horario.valido = False
         horario.save()
@@ -41,9 +43,8 @@ class ConsultasViewSet(ModelViewSet):
         return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
-        print("deleta")
         today = datetime.date(datetime.now())
-        consulta = Consultas.objects.filter(pk=self.kwargs.get('pk')).first()
+        consulta = Consulta.objects.filter(pk=self.kwargs.get('pk')).first()
         print(consulta)
         print(today)
         if consulta is None:
@@ -51,7 +52,7 @@ class ConsultasViewSet(ModelViewSet):
         if consulta.agenda.data_agenda <= today:
             raise APIException('não é possivel desmarcar uma consulta passada')
 
-        horario = Horarios.objects.get(pk = consulta.horario_id)
+        horario = Horario.objects.get(pk = consulta.horario_id)
         horario.valido = True
         horario.save()
         consulta.delete()
@@ -63,6 +64,7 @@ class AgendasViewSet(ReadOnlyModelViewSet):
     serializer_class = AgendaSerializer
     
     def get_queryset(self):
+        # Realiza a validação da agenda e dos horarios
         valid = valida_agenda()
         queryset = self.queryset
         hoje = datetime.now()

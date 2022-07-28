@@ -1,4 +1,3 @@
-from datetime import timedelta
 from django.db import models
 
 class Medico(models.Model):
@@ -29,7 +28,7 @@ class Agenda(models.Model):
     class Meta:
         ordering = ['data_agenda']
     
-class Horarios(models.Model):
+class Horario(models.Model):
     agenda = models.ForeignKey(Agenda, related_name="horarios", on_delete=models.CASCADE)
     horario = models.TimeField()
     valido = models.BooleanField(default=True)
@@ -44,9 +43,9 @@ class Horarios(models.Model):
         ordering = ['horario']
         unique_together = ('horario', 'agenda',)
 
-class Consultas(models.Model):
+class Consulta(models.Model):
     agenda = models.ForeignKey(Agenda, related_name="agenda", on_delete=models.CASCADE)
-    horario = models.ForeignKey(Horarios, related_name="horarios", on_delete=models.CASCADE)
+    horario = models.ForeignKey(Horario, related_name="horarios", on_delete=models.CASCADE)
     data_agendamento = models.DateField(null = True)
 
     class Meta:

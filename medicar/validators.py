@@ -1,5 +1,5 @@
 from datetime import date, datetime 
-from medicar.models import Agenda, Horarios
+from medicar.models import Agenda, Horario
 
 def agenda_retroativa(data_agenda, lista_de_erros):
     """Verifica se a agenda está sendo criada para um dia retroativo"""
@@ -21,7 +21,7 @@ def valida_agenda():
     for data_passada in datas_passadas:
         data_passada.invalidar()
     #invalidar horarios de hoje que já passou da hora atual
-    horas_passadas = Horarios.objects.filter(agenda__data_agenda = date.today(), horario__lt = datetime.now().time())
+    horas_passadas = Horario.objects.filter(agenda__data_agenda = date.today(), horario__lt = datetime.now().time())
     horas_passadas.update(valido = False)
     #invalidar agendas que todos os horarios estao invalidos
     agendas_validas = Agenda.objects.filter(valido = True)

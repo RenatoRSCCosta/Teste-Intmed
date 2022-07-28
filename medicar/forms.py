@@ -21,5 +21,5 @@ class AgendaForm(forms.ModelForm):
 
 class HorariosForm(forms.ModelForm):
     class Meta:
-        model = Horarios
+        model = Horario
         exclude = ('valido',)

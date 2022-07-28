@@ -8,7 +8,7 @@ class Medicos(admin.ModelAdmin):
     list_display_links = ('id','nome')
 
 class HorariosInline(admin.TabularInline):
-    model = Horarios
+    model = Horario
     form = HorariosForm
 
 class Agendas(admin.ModelAdmin):
