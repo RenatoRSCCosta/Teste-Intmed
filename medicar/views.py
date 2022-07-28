@@ -18,14 +18,13 @@ class ConsultasViewSet(ModelViewSet):
         agora = datetime.now().strftime('%H:%M')
 
         return self.queryset.filter(Q(agenda__data_agenda__gt = hoje) 
-        | Q(agenda__data_agenda = hoje, horario__horario__gte = agora)).order_by('-agenda__data_agenda','-horario__horario')
+        | Q(agenda__data_agenda = hoje, horario__horario__gte = agora)).order_by('agenda__data_agenda','horario__horario')
 
     def create(self, request, *args, **kwargs):
+        valid = valida_agenda()
         dados = request.data
         agenda = Agenda.objects.get(pk = dados['agenda_id'])
-        horario = Horarios.objects.get(horario = dados['horario'],agenda = dados['agenda_id'])
-        #horario = Horarios.objects.all().filter(horario = dados['horario'], agenda = dados['agenda'])
-        print(horario)        
+        horario = Horarios.objects.get(horario = dados['horario'],agenda = dados['agenda_id'])       
         data_agendamento = datetime.now().strftime('%Y-%m-%d')
 
         if not horario.valido:
@@ -64,6 +63,7 @@ class AgendasViewSet(ReadOnlyModelViewSet):
     serializer_class = AgendaSerializer
     
     def get_queryset(self):
+        valid = valida_agenda()
         queryset = self.queryset
         hoje = datetime.now()
         medicos = self.request.query_params.getlist('medico')

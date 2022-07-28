@@ -23,7 +23,7 @@ class HorariosSerializer(serializers.ModelSerializer):
         return str(instance.horario)[:5]
 
 class AgendaSerializer(serializers.ModelSerializer):
-    valid = valida_agenda()
+    
     medico = MedicoSerializer(many = False, read_only = False)
     horarios = serializers.SerializerMethodField('get_horarios')
 

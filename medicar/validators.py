@@ -20,10 +20,10 @@ def valida_agenda():
     datas_passadas = Agenda.objects.filter(data_agenda__lt=date.today())
     for data_passada in datas_passadas:
         data_passada.invalidar()
-        #invalidar horarios de hoje que já passou da hora atual
+    #invalidar horarios de hoje que já passou da hora atual
     horas_passadas = Horarios.objects.filter(agenda__data_agenda = date.today(), horario__lt = datetime.now().time())
     horas_passadas.update(valido = False)
-        #invalidar agendas que todos os horarios estao invalidos
+    #invalidar agendas que todos os horarios estao invalidos
     agendas_validas = Agenda.objects.filter(valido = True)
      
     for agenda in agendas_validas:
