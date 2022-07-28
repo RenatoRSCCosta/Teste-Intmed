@@ -15,7 +15,7 @@ def medico_com_agenda(medico, data_agenda, lista_de_erros):
 
 
 def valida_agenda():
-    #Realiza validações de datas e horarios passados
+    """Realiza validações de datas e horarios passados"""
     #invalida agendas que a data já passou
     datas_passadas = Agenda.objects.filter(data_agenda__lt=date.today())
     for data_passada in datas_passadas:
