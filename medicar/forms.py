@@ -5,7 +5,7 @@ from medicar.validators import *
 class AgendaForm(forms.ModelForm):
     class Meta:
         model = Agenda
-        fields = '__all__'
+        fields = ('medico','data_agenda')
 
     def clean(self):
         data_agenda = self.cleaned_data.get('data_agenda')

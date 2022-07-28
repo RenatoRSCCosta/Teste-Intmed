@@ -17,7 +17,7 @@ class HorariosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Horarios
         fields = (
-            'horario_horaio',
+            'horario',
         )
     def to_representation(self, instance):
         return str(instance.horario)[:5]

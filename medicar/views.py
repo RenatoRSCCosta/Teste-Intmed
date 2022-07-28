@@ -22,7 +22,7 @@ class ConsultasViewSet(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         dados = request.data
-        horario = Horarios.objects.get(pk = dados['horario'])
+        horario = Horarios.objects.get(horario = dados['horario'])
         agenda = Agenda.objects.get(pk = dados['agenda'])
         data_agendamento = datetime.now().strftime('%Y-%m-%d')
 
