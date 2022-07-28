@@ -14,19 +14,23 @@ class ConsultasViewSet(ModelViewSet):
     allowed_methods = ('GET','POST','DELETE')
 
     def get_queryset(self):
-        return self.queryset.filter(Q(agenda__data_agenda__gt = datetime.now().strftime('%Y-%m-%d')) | 
-        Q(agenda__data_agenda = datetime.now().strftime('%Y-%m-%d'),horario__horario__gte = datetime.now().strftime('%H:%M')))
+        hoje = datetime.now().strftime('%Y-%m-%d')
+        agora = datetime.now().strftime('%H:%M')
+
+        return self.queryset.filter(Q(agenda__data_agenda__gt = hoje) 
+        | Q(agenda__data_agenda = hoje, horario__horario__gte = agora)).order_by('-agenda__data_agenda','-horario__horario')
 
     def create(self, request, *args, **kwargs):
-
         dados = request.data
         horario = Horarios.objects.get(pk = dados['horario'])
         agenda = Agenda.objects.get(pk = dados['agenda'])
         data_agendamento = datetime.now().strftime('%Y-%m-%d')
+
         if not horario.valido:
             raise APIException('Horario não disponivel para agendamento')
         if not agenda.valido:
             raise APIException('Agenda não disponivel para agendamento')
+
         nova_consulta = Consultas.objects.create(data_agendamento=data_agendamento, horario_id=dados['horario'], agenda_id=dados['agenda'])
         nova_consulta.save()
         horario.valido = False
@@ -38,11 +42,12 @@ class ConsultasViewSet(ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         today = datetime.date(datetime.now())
         consulta = Consultas.objects.filter(pk=self.kwargs.get('pk')).first()
-        print(self.kwargs.get('pk'))
+        
         if consulta is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
         if consulta.data_agendamento <= today:
             raise APIException('não é possivel desmarcar uma consulta passada')
+
         horario = Horarios.objects.get(pk = consulta.horario_id)
         horario.valido = True
         horario.save()
