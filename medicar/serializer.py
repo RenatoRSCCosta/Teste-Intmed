@@ -12,12 +12,12 @@ class MedicoSerializer(serializers.ModelSerializer):
 
 
 class HorariosSerializer(serializers.ModelSerializer):
-    horario = serializers.TimeField(format='%H:%M')
+    
     #agenda = serializers.PrimaryKeyRelatedField(queryset = Agenda.objects.all(), many = False)
     class Meta:
         model = Horarios
         fields = (
-            'horario',
+            'horario_horaio',
         )
     def to_representation(self, instance):
         return str(instance.horario)[:5]
