@@ -32,7 +32,6 @@ class Agenda(models.Model):
 class Horarios(models.Model):
     agenda = models.ForeignKey(Agenda, related_name="horarios", on_delete=models.CASCADE)
     horario = models.TimeField()
-    status = models.CharField(max_length=2, default ='AG')
     valido = models.BooleanField(default=True)
 
     def __str___(self):
@@ -43,7 +42,7 @@ class Horarios(models.Model):
 
     class Meta:
         ordering = ['horario']
-        unique_together = ('horario', 'agenda', )
+        #unique_together = ('horario', 'agenda', )
 
 class Consultas(models.Model):
     agenda = models.ForeignKey(Agenda, related_name="agenda", on_delete=models.CASCADE)
