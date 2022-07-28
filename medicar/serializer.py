@@ -13,10 +13,10 @@ class MedicoSerializer(serializers.ModelSerializer):
 
 class HorariosSerializer(serializers.ModelSerializer):
     
-    #agenda = serializers.PrimaryKeyRelatedField(queryset = Agenda.objects.all(), many = False)
     class Meta:
         model = Horarios
         fields = (
+            'id',
             'horario',
         )
     def to_representation(self, instance):
@@ -25,8 +25,13 @@ class HorariosSerializer(serializers.ModelSerializer):
 class AgendaSerializer(serializers.ModelSerializer):
     valid = valida_agenda()
     medico = MedicoSerializer(many = False, read_only = False)
-    horarios = HorariosSerializer(many = True, read_only = False)
-    #horarios = serializers.SerializerMethodField('get_horarios')
+    horarios = serializers.SerializerMethodField('get_horarios')
+
+    def get_horarios(self, agenda):
+        queryset = Horarios.objects.filter(agenda_id = agenda.id, valido = True)
+        serializer = HorariosSerializer(instance = queryset, many = True)
+        return serializer.data
+
 
     class Meta:
         model = Agenda

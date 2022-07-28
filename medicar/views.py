@@ -22,8 +22,10 @@ class ConsultasViewSet(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         dados = request.data
-        horario = Horarios.objects.get(horario = dados['horario'])
         agenda = Agenda.objects.get(pk = dados['agenda'])
+        horario = Horarios.objects.get(horario = dados['horario'],agenda = dados['agenda'])
+        #horario = Horarios.objects.all().filter(horario = dados['horario'], agenda = dados['agenda'])
+        print(horario)        
         data_agendamento = datetime.now().strftime('%Y-%m-%d')
 
         if not horario.valido:
@@ -31,7 +33,7 @@ class ConsultasViewSet(ModelViewSet):
         if not agenda.valido:
             raise APIException('Agenda não disponivel para agendamento')
 
-        nova_consulta = Consultas.objects.create(data_agendamento=data_agendamento, horario_id=dados['horario'], agenda_id=dados['agenda'])
+        nova_consulta = Consultas.objects.create(data_agendamento=data_agendamento, horario_id=horario.id, agenda_id=agenda.id)
         nova_consulta.save()
         horario.valido = False
         horario.save()
@@ -62,7 +64,6 @@ class AgendasViewSet(ReadOnlyModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
         hoje = datetime.now()
-
         medicos = self.request.query_params.getlist('medico')
         data_inicio = self.request.query_params.get('data_inicio')
         data_final = self.request.query_params.get('data_final')

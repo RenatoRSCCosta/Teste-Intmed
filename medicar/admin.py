@@ -1,6 +1,7 @@
+from medicar.forms import AgendaForm, HorariosForm
 from django.contrib import admin
 from medicar.models import *
-from medicar.forms import AgendaForm, HorariosForm
+
 
 class Medicos(admin.ModelAdmin):
     list_display = ('id','nome','crm','email')
