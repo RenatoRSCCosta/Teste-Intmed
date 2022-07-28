@@ -78,10 +78,11 @@ WSGI_APPLICATION = 'setup.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'desafio_intmed',
-        'USER': 'postgres',
-        'PASSWORD':'123456',
-        'HOST': 'LOCALHOST'
+        'NAME': 'IntmedTeste',
+        'USER': 'medicar',
+        'PASSWORD':'AVNS_XY4lPIHnrSyllYag8Ek',
+        'HOST': 'db-postgresql-nyc3-27213-do-user-11464761-0.b.db.ondigitalocean.com',
+        'PORT': '25060'
     }
 }
 

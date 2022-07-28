@@ -13,8 +13,9 @@ def medico_com_agenda(medico, data_agenda, lista_de_erros):
     if agenda:
         lista_de_erros['medico'] = "Não é possivel criar mais de uma agenda para o mesmo medico no mesmo dia"
 
+
 def valida_agenda():
-    """Realiza validações de datas e horarios passados"""
+    #Realiza validações de datas e horarios passados
     #invalida agendas que a data já passou
     datas_passadas = Agenda.objects.filter(data_agenda__lt=date.today())
     for data_passada in datas_passadas:
@@ -28,4 +29,3 @@ def valida_agenda():
     for agenda in agendas_validas:
         if not agenda.horarios_validos():
             agenda.invalidar()
-    

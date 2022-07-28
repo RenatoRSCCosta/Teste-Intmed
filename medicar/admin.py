@@ -10,7 +10,6 @@ class Medicos(admin.ModelAdmin):
 class HorariosInline(admin.TabularInline):
     model = Horarios
     form = HorariosForm
-    list_display = ('agenda','horario',)
 
 class Agendas(admin.ModelAdmin):
     form = AgendaForm
@@ -20,5 +19,4 @@ class Agendas(admin.ModelAdmin):
     ]
     
 admin.site.register(Agenda,Agendas)
-admin.site.register(Medico,Medicos)   
-#admin.site.register(Horarios,Horario)
+admin.site.register(Medico,Medicos)

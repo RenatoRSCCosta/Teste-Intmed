@@ -42,7 +42,7 @@ class Horarios(models.Model):
 
     class Meta:
         ordering = ['horario']
-        #unique_together = ('horario', 'agenda',)
+        unique_together = ('horario', 'agenda',)
 
 class Consultas(models.Model):
     agenda = models.ForeignKey(Agenda, related_name="agenda", on_delete=models.CASCADE)

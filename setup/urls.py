@@ -21,8 +21,8 @@ from rest_framework import routers
 from medicar.views import *
 
 router = routers.DefaultRouter()
-router.register('consulta', ConsultasViewSet, basename='consulta')
-router.register('agenda', AgendasViewSet, basename='agenda')
+router.register('consultas', ConsultasViewSet, basename='consultas')
+router.register('agendas', AgendasViewSet, basename='agendas')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

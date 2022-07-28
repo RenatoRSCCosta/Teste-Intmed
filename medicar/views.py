@@ -22,8 +22,8 @@ class ConsultasViewSet(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         dados = request.data
-        agenda = Agenda.objects.get(pk = dados['agenda'])
-        horario = Horarios.objects.get(horario = dados['horario'],agenda = dados['agenda'])
+        agenda = Agenda.objects.get(pk = dados['agenda_id'])
+        horario = Horarios.objects.get(horario = dados['horario'],agenda = dados['agenda_id'])
         #horario = Horarios.objects.all().filter(horario = dados['horario'], agenda = dados['agenda'])
         print(horario)        
         data_agendamento = datetime.now().strftime('%Y-%m-%d')
@@ -42,12 +42,14 @@ class ConsultasViewSet(ModelViewSet):
         return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
+        print("deleta")
         today = datetime.date(datetime.now())
         consulta = Consultas.objects.filter(pk=self.kwargs.get('pk')).first()
-        
+        print(consulta)
+        print(today)
         if consulta is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        if consulta.data_agendamento <= today:
+        if consulta.agenda.data_agenda <= today:
             raise APIException('não é possivel desmarcar uma consulta passada')
 
         horario = Horarios.objects.get(pk = consulta.horario_id)
@@ -70,13 +72,13 @@ class AgendasViewSet(ReadOnlyModelViewSet):
         crm = self.request.query_params.getlist('crm')
 
         if medicos:
-            queryset = queryset.filter(medico__id__in = medicos, valido = True, horarios__valido = True).order_by('-data_agenda').distinct()
+            queryset = queryset.filter(medico__id__in = medicos, valido = True, horarios__valido = True).order_by('data_agenda').distinct()
         if data_inicio and data_final:
-            queryset = queryset.filter(data_agenda__range=(data_inicio, data_final),valido = True, horarios__valido = True).order_by('-data_agenda').distinct()
+            queryset = queryset.filter(data_agenda__range=(data_inicio, data_final),valido = True, horarios__valido = True).order_by('data_agenda').distinct()
         if crm:
-            queryset = queryset.filter(medico__crm__in = crm, valido = True, horarios__valido = True).order_by('-data_agenda').distinct()
+            queryset = queryset.filter(medico__crm__in = crm, valido = True, horarios__valido = True).order_by('data_agenda').distinct()
         if not medicos and not data_inicio and not data_final and not crm:
-            queryset = queryset.filter(data_agenda__gte=hoje.strftime('%Y-%m-%d'), valido = True, horarios__valido = True).order_by('-data_agenda').distinct()
+            queryset = queryset.filter(data_agenda__gte=hoje.strftime('%Y-%m-%d'), valido = True, horarios__valido = True).order_by('data_agenda').distinct()
 
         return queryset
         
