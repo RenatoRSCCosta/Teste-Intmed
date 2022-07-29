@@ -1,9 +1,11 @@
+from django import forms
 from medicar.validators import *
 from medicar.models import *
-from django import forms
+
 
 
 class AgendaForm(forms.ModelForm):
+    """Model forms de agenda para uso no admin"""
     class Meta:
         model = Agenda
         exclude = ('valido',)
@@ -24,6 +26,7 @@ class AgendaForm(forms.ModelForm):
         return self.cleaned_data
 
 class HorariosForm(forms.ModelForm):
+    """Model forms de horarios para uso no admin"""
     class Meta:
         model = Horario
         exclude = ('valido',)

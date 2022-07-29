@@ -1,21 +1,20 @@
-from rest_framework.viewsets import ReadOnlyModelViewSet, mixins,GenericViewSet
+from django.db.models import Q
+from rest_framework.viewsets import mixins,GenericViewSet
 from rest_framework.exceptions import APIException
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from rest_framework import status
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 from medicar.serializer import *
 from medicar.validators import *
-from django.db.models import Q
 from medicar.models import *
-from drf_yasg.utils import swagger_auto_schema
-from rest_framework.decorators import action
-from drf_yasg import openapi
-
-
 
 class ConsultasViewSet(mixins.ListModelMixin,
                        mixins.CreateModelMixin,
                        mixins.DestroyModelMixin,
                        GenericViewSet):
+    """Gerencia os endpoints de consulta, metodos disponiveis (GET, POST, DELETE)"""
     queryset = Consulta.objects.all()
     serializer_class = ConsultaSerializer
 
@@ -76,6 +75,7 @@ class ConsultasViewSet(mixins.ListModelMixin,
                            
 class AgendasViewSet(mixins.ListModelMixin,
                      GenericViewSet):
+    """Gerencia os endpoints de agenda, metodos disponiveis (GET)"""
     queryset = Agenda.objects.all()
     serializer_class = AgendaSerializer
 
