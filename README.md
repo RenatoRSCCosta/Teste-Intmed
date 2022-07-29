@@ -58,3 +58,16 @@ O projeto utiliza uma base de dados **postgreSql** hospedada em um database clus
 
 
 
+
+## 🔗 Links
+[![github](https://img.shields.io/badge/my_portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://github.com/RenatoRSCCosta)
+[![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/renato-costa-95b18a1a4/)
+
+
+
+## Referência
+
+ - [Django Docs](https://docs.djangoproject.com/en/4.0/)
+ - [Django Rest Framework Docs](https://www.django-rest-framework.org/)
+ - [Alura - Formação Django](https://www.alura.com.br/formacao-django)
+ - [Alura - Formação Django REST Api](https://www.alura.com.br/formacao-django-rest)
