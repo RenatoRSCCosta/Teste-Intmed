@@ -13,6 +13,12 @@ def medico_com_agenda(medico, data_agenda, lista_de_erros):
     if agenda:
         lista_de_erros['medico'] = "Não é possivel criar mais de uma agenda para o mesmo medico no mesmo dia"
 
+def horario_pode_editar(horario_id, lista_de_erros):
+    """Verifica se o horario esta apto para edição"""
+    horarios = Horario.objects.get(pk = horario_id)
+    if horarios.valido is False:
+        lista_de_erros['horario'] = "Não é possivel alterar um horario que está agendado ou que já passou"
+
 
 def valida_agenda():
     """Realiza validações de datas e horarios passados"""
