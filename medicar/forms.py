@@ -32,7 +32,8 @@ class HorariosForm(forms.ModelForm):
         horario = self.cleaned_data.get('id')
         print(horario)
         lista_de_erros = {}
-        horario_pode_editar(horario.id, lista_de_erros)
+        if horario:
+            horario_pode_editar(horario.id, lista_de_erros)
         if lista_de_erros is not None:
             for erro in lista_de_erros:
                 mensagem_erro = lista_de_erros[erro]
