@@ -12,9 +12,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 from dotenv import load_dotenv
-import django_heroku
 import os
-
+import django_heroku
 
 # Config Variables Enviroment
 
