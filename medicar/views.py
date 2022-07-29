@@ -24,13 +24,18 @@ class ConsultasViewSet(mixins.ListModelMixin,
         agora = datetime.now().strftime('%H:%M')
 
         return self.queryset.filter(Q(agenda__data_agenda__gt = hoje) 
-        | Q(agenda__data_agenda = hoje, horario__horario__gte = agora)).order_by('agenda__data_agenda','horario__horario')
+                                  | Q(agenda__data_agenda = hoje, horario__horario__gte = agora)).order_by('agenda__data_agenda','horario__horario')
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = ConsultaSerializer(queryset, many = True)
+        return Response(serializer.data)
 
     @swagger_auto_schema(request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,
         properties={
-            'agenda_id': openapi.Schema(type=openapi.TYPE_STRING, description='The desc'),
-            'horario': openapi.Schema(type=openapi.TYPE_STRING, description='The desc'),
+            'agenda_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+            'horario': openapi.Schema(type=openapi.TYPE_STRING),
         }))
 
     def create(self, request, *args, **kwargs):
@@ -58,8 +63,6 @@ class ConsultasViewSet(mixins.ListModelMixin,
     def destroy(self, request, *args, **kwargs):
         today = datetime.date(datetime.now())
         consulta = Consulta.objects.filter(pk=self.kwargs.get('pk')).first()
-        print(consulta)
-        print(today)
         if consulta is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
         if consulta.agenda.data_agenda <= today:
@@ -70,18 +73,11 @@ class ConsultasViewSet(mixins.ListModelMixin,
         horario.save()
         consulta.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class AgendasViewSet(ReadOnlyModelViewSet):
+                           
+class AgendasViewSet(mixins.ListModelMixin,
+                     GenericViewSet):
     queryset = Agenda.objects.all()
     serializer_class = AgendaSerializer
-
-    @swagger_auto_schema(request_body=openapi.Schema(
-        type=openapi.TYPE_OBJECT,
-        properties={
-            'agenda_id': openapi.Schema(type=openapi.TYPE_STRING, description='The desc'),
-            'horario': openapi.Schema(type=openapi.TYPE_STRING, description='The desc'),
-        }))
 
     def get_queryset(self):
         # Realiza a validação da agenda e dos horarios
@@ -103,4 +99,23 @@ class AgendasViewSet(ReadOnlyModelViewSet):
             queryset = queryset.filter(data_agenda__gte=hoje.strftime('%Y-%m-%d'), valido = True, horarios__valido = True).order_by('data_agenda').distinct()
 
         return queryset
+
+    medico = openapi.Parameter('medico', in_=openapi.IN_QUERY,
+                           type=openapi.TYPE_STRING)
+    crm = openapi.Parameter('crm', in_=openapi.IN_QUERY,
+                           type=openapi.TYPE_STRING)
+    data_inicio = openapi.Parameter('data_inicio', in_=openapi.IN_QUERY,
+                           type=openapi.TYPE_STRING)
+    data_final = openapi.Parameter('data_final', in_=openapi.IN_QUERY,
+                           type=openapi.TYPE_STRING)
+    
+    @swagger_auto_schema(
+        manual_parameters=[medico,crm,data_inicio,data_final],
+    )
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        print(queryset)
+        serializer = AgendaSerializer(queryset, many = True)
+        return Response(serializer.data)
         
