@@ -1,6 +1,7 @@
-from django import forms
-from medicar.models import Agenda
 from medicar.validators import *
+from medicar.models import *
+from django import forms
+
 
 class AgendaForm(forms.ModelForm):
     class Meta:
@@ -11,8 +12,11 @@ class AgendaForm(forms.ModelForm):
         data_agenda = self.cleaned_data.get('data_agenda')
         medico = self.cleaned_data.get('medico')
         lista_de_erros = {}
-        agenda_retroativa(data_agenda, lista_de_erros)
-        medico_com_agenda(medico, data_agenda, lista_de_erros)
+        if hasattr(self, 'instance') and self.instance.pk is not None:
+            agenda_retroativa(data_agenda, lista_de_erros)
+        else:        
+            medico_com_agenda(medico, data_agenda, lista_de_erros)
+            agenda_retroativa(data_agenda, lista_de_erros)
         if lista_de_erros is not None:
             for erro in lista_de_erros:
                 mensagem_erro = lista_de_erros[erro]
