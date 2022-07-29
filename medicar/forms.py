@@ -30,7 +30,6 @@ class HorariosForm(forms.ModelForm):
 
     def clean(self):
         horario = self.cleaned_data.get('id')
-        print(horario)
         lista_de_erros = {}
         if horario:
             horario_pode_editar(horario.id, lista_de_erros)
