@@ -1,4 +1,4 @@
-from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from rest_framework.viewsets import ReadOnlyModelViewSet, mixins,GenericViewSet
 from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from rest_framework import status
@@ -6,12 +6,18 @@ from medicar.serializer import *
 from medicar.validators import *
 from django.db.models import Q
 from medicar.models import *
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework.decorators import action
+from drf_yasg import openapi
 
 
-class ConsultasViewSet(ModelViewSet):
+
+class ConsultasViewSet(mixins.ListModelMixin,
+                       mixins.CreateModelMixin,
+                       mixins.DestroyModelMixin,
+                       GenericViewSet):
     queryset = Consulta.objects.all()
     serializer_class = ConsultaSerializer
-    allowed_methods = ('GET','POST','DELETE')
 
     def get_queryset(self):
         hoje = datetime.now().strftime('%Y-%m-%d')
@@ -19,6 +25,13 @@ class ConsultasViewSet(ModelViewSet):
 
         return self.queryset.filter(Q(agenda__data_agenda__gt = hoje) 
         | Q(agenda__data_agenda = hoje, horario__horario__gte = agora)).order_by('agenda__data_agenda','horario__horario')
+
+    @swagger_auto_schema(request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'agenda_id': openapi.Schema(type=openapi.TYPE_STRING, description='The desc'),
+            'horario': openapi.Schema(type=openapi.TYPE_STRING, description='The desc'),
+        }))
 
     def create(self, request, *args, **kwargs):
         # Realiza a validação da agenda e dos horarios
@@ -62,7 +75,14 @@ class ConsultasViewSet(ModelViewSet):
 class AgendasViewSet(ReadOnlyModelViewSet):
     queryset = Agenda.objects.all()
     serializer_class = AgendaSerializer
-    
+
+    @swagger_auto_schema(request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'agenda_id': openapi.Schema(type=openapi.TYPE_STRING, description='The desc'),
+            'horario': openapi.Schema(type=openapi.TYPE_STRING, description='The desc'),
+        }))
+
     def get_queryset(self):
         # Realiza a validação da agenda e dos horarios
         valid = valida_agenda()
