@@ -21,6 +21,7 @@ Para rodar esse projeto, você vai precisar adicionar as seguintes variáveis de
 `PASSWORD`
 `USER`
 `NAME`
+`DATABASE_URL`
 
 Obs: No projeto existe um arquivo .env.example para consulta, o arquivo **.env** utilizado no projeto está em anexo no email
 
@@ -54,7 +55,9 @@ Para visualizar os endpoints disponíveis, basta acessar o link [http://localhos
 
 ## Infraestrutura
 
-O projeto utiliza uma base de dados **postgreSql** hospedada em um database cluster na Digital Ocean
+O projeto está hospedado na nuvem através da plataforma **heroku** e utiliza uma base de dados **postgreSql** hospedada em um database cluster na Digital Ocean
+
+O projeto na nuvem pode ser acessado através do link [https://api-medicar.herokuapp.com/](https://api-medicar.herokuapp.com/)
 
 
 
