@@ -1,3 +1,4 @@
+from cProfile import label
 from rest_framework import serializers
 from medicar.validators import *
 from medicar.models import *
@@ -14,7 +15,6 @@ class HorariosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Horario
         fields = (
-            'id',
             'horario',
         )
     def to_representation(self, instance):
@@ -42,8 +42,10 @@ class AgendaSerializer(serializers.ModelSerializer):
 
 class ConsultaSerializer(serializers.ModelSerializer):
     """Serializador do model de consulta"""
+    data_agendamento = serializers.DateField(read_only = True)
+    agenda_id = serializers.IntegerField(read_only = False)
+    horario = serializers.CharField(read_only = False)
     medico = serializers.SerializerMethodField('get_medico')
-    horario = HorariosSerializer(many = False, read_only = False)
     dia = serializers.SerializerMethodField('get_dia')
 
     # Retorna os dados do medico
@@ -62,6 +64,7 @@ class ConsultaSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'dia',
+            'agenda_id',
             'horario',
             'data_agendamento',
             'medico',

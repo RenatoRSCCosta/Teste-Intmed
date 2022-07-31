@@ -40,10 +40,10 @@ class ConsultasViewSet(mixins.ListModelMixin,
     def create(self, request, *args, **kwargs):
         # Realiza a validação da agenda e dos horarios
         valid = valida_agenda()
-
-        dados = request.data
-        agenda = Agenda.objects.get(pk = dados['agenda_id'])
-        horario = Horario.objects.get(horario = dados['horario'],agenda = dados['agenda_id'])       
+        agenda_id = request.POST.get('agenda_id', None)
+        horario = request.POST.get('horario', None)
+        agenda = Agenda.objects.get(pk = agenda_id)       
+        horario = Horario.objects.get(horario = horario,agenda = agenda_id)       
         data_agendamento = datetime.now().strftime('%Y-%m-%d')
 
         if not horario.valido:
@@ -68,14 +68,17 @@ class ConsultasViewSet(mixins.ListModelMixin,
             raise APIException('não é possivel desmarcar uma consulta passada')
 
         horario = Horario.objects.get(pk = consulta.horario_id)
+        agenda = Agenda.objects.get(pk = consulta.agenda_id)
         horario.valido = True
+        agenda.valido = True
         horario.save()
+        agenda.save()
         consulta.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
                            
 class AgendasViewSet(mixins.ListModelMixin,
                      GenericViewSet):
-    """Gerencia os endpoints de agenda, metodos disponiveis (GET)"""
+    """Gerencia os endpoints de agenda, chamar esse endpoint sem passar parametros retorna todas as agendas disponiveis, metodos disponiveis (GET)"""
     queryset = Agenda.objects.all()
     serializer_class = AgendaSerializer
 

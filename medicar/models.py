@@ -33,8 +33,8 @@ class Horario(models.Model):
     horario = models.TimeField()
     valido = models.BooleanField(default=True)
 
-    def __str___(self):
-        return f"{self.horario}"
+    def __str__(self):
+        return str(self.horario)[:5]
     
     def horarios_disponiveis(self):
         return self.filter(validado = True)
