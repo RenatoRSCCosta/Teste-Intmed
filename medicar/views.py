@@ -40,12 +40,9 @@ class ConsultasViewSet(mixins.ListModelMixin,
     def create(self, request, *args, **kwargs):
         # Realiza a validação da agenda e dos horarios
         valid = valida_agenda()
-        teste = request.data
-        agenda_id = teste['agenda_id']#request.POST.get('agenda_id', None)
-        horario = teste['horario']#request.POST.get('horario', None)
-        print(teste)
-        print(agenda_id)
-        print(horario)
+        dados = request.data
+        agenda_id = dados['agenda_id']
+        horario = dados['horario']
         agenda = Agenda.objects.get(pk = agenda_id)       
         horario = Horario.objects.get(horario = horario,agenda = agenda_id)       
         data_agendamento = datetime.now().strftime('%Y-%m-%d')
